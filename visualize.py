@@ -2,7 +2,7 @@
 import pygame
 from environment import Environment
 import constants
-from agents.dqn.dqn import Agent
+from agent import Agent
 
 pygame.init()
 
@@ -30,7 +30,7 @@ while running:
             running = False
 
     if not env.terminated():
-        state = Agent.featurize(env.game_state())
+        state = env.observe()
         action = agent.take_action(state)
         print(action_set[action])
         reward = env.act(action_set[action])
