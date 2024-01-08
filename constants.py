@@ -2,20 +2,6 @@ import math
 
 # TODO: Clean up
 
-# DQN
-C = 5
-lr = 1e-4
-discount_factor = 0.99
-replay_buffer_size = 50000
-total_episodes = 100000
-initial_epsilon = 0.1
-min_epsilon = 0.0001
-epsilon_discount_rate = 1e-7
-batch_size = 32
-maximum_checkpoints = 5
-save_logs_frequency = 1000
-initial_observation_episodes = 100
-show_loss_frequency = 100
 
 # For environment, taken from game
 inner_radius = 5

@@ -28,7 +28,7 @@ class Environment:
         self.episode_over = False
         self.entities = [self.track, self.unicycle]
 
-    def act(self, action):
+    def step(self, action):
         # Execute timestep
 
         if self.episode_over:
@@ -94,7 +94,7 @@ class Environment:
         # Add 1 as a last entry as a bias term an agent can incorporate
         return np.array([r, cos_theta, sin_theta, cos_heading, sin_heading, rider_roll, lean, wheel_momentum, lean_momentum, 1])
 
-    def n_obs():
+    def n_obs(self):
         return 10
 
     def action_set(self):

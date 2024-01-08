@@ -1,8 +1,9 @@
-
+import numpy as np
 import pygame
 from environment import Environment
 import constants
-from agent import Agent
+from vpg import Agent
+import glob
 
 pygame.init()
 
@@ -13,10 +14,19 @@ clock = pygame.time.Clock()
 pygame.display.set_caption('Agent Demo')
 
 env = Environment(canvas=canvas)
+
 action_set = env.action_set()
-agent = Agent(action_set)
-agent.try_restore_latest('checkpoints')
-# agent.stop_epsilon()  # Act only greedily
+n_obs = env.n_obs()
+n_actions = len(action_set)
+agent = Agent(n_obs, n_actions)
+
+checkpoints = glob.glob('checkpoints/*.pth')
+
+if checkpoints:
+    latest = max(int(s[s.index('-')+1:-4]) for s in checkpoints)
+    checkpoint = f'checkpoints/checkpoint-{latest}.pth'
+    agent.load(checkpoint)
+    print(f'Found checkpoint! Loaded {checkpoint}')
 
 env.reset()
 
@@ -31,9 +41,13 @@ while running:
 
     if not env.terminated():
         state = env.observe()
-        action = agent.take_action(state)
-        print(action_set[action])
-        reward = env.act(action_set[action])
+
+        action_probs = agent.predict(state).detach().numpy()
+        action_index = np.random.choice(
+            np.arange(len(action_probs)), p=action_probs)
+        action = action_set[action_index]
+
+        reward = env.step(action)
         total_reward += reward
 
     print('return', total_reward)
